@@ -13,7 +13,7 @@ class HomePageTest(TestCase):
         response = self.client.get('/')
 
         html = response.content.decode('UTF-8')
-        self.assertTrue(html.startswith('<html>'))
+        self.assertTrue(html.startswith('<!DOCTYPE html>'))
         self.assertIn('<title>To-Do lists</title>', html)
         self.assertTrue(html.endswith('</html>'))
 
