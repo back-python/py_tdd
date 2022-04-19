@@ -30,7 +30,7 @@ class NewVisitorTest(unittest.TestCase):
         )
 
         # Ela digita "Buy peacock feathers" em uma caixa de texto
-        inputbox.send_keys('Buy a peacock feathers')
+        inputbox.send_keys('Buy peacock feathers')
 
         # Quando ela tecla enter, a página é atualizada, e agora lista
         # "1: Buy peacock feathers" como um item em uma lista de tarefas
@@ -38,17 +38,21 @@ class NewVisitorTest(unittest.TestCase):
         time.sleep(1)
 
         table = self.browser.find_element(By.ID, 'id_list_table')
-        rows = self.browser.find_elements(By.TAG_NAME, 'tr')
-        self.assertTrue(
-            any(row.text == '1: Buy peacock feathers' for row in rows),
-            'New To-Do item did not appear in table'
-        )
+        rows = table.find_elements(By.TAG_NAME, 'tr')
+        self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
 
         # Ainda continua havendo uma caixa de texto convidando-a a acrescentar
         # outro item. Ela insere "Use peacock feathers to make a fly"
-
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys('Use peacock feathers to make a fly')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
 
         # A página é atualizada novamente e agora mostra os dois itens em sua lista
+        table = self.browser.find_element(By.ID, 'id_list_table')
+        rows = table.find_elements(By.TAG_NAME, 'tr')
+        self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
+        self.assertIn('2: Use peacock feathers to make a fly', [row.text for row in rows])
 
         # Alexa se pergunta se o site lembrará de sua lista. Então ela nota que o si-
         # te gerou um URL único para ela -- há um pequeno texto explicativo para isso
@@ -56,7 +60,7 @@ class NewVisitorTest(unittest.TestCase):
         # Ela acessa essa URL e sua lista continua lá
 
         # Satisfeita, ela volta a dormir
-
+        
         self.fail('finish the test!')
 
 
